@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="#LinkedList源码解析 LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:LinkedList LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。">
+<meta name="description" content="LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:LinkedList LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。同时LinkedList不是线程">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LinkedList源码解析">
 <meta property="og:url" content="http://yoursite.com/2019/02/18/linkList/index.html">
 <meta property="og:site_name" content="Wink&#39;blog">
-<meta property="og:description" content="#LinkedList源码解析 LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:LinkedList LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。">
+<meta property="og:description" content="LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:LinkedList LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。同时LinkedList不是线程">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://image.winkspace.site/20190215112511.png">
 <meta property="og:image" content="http://image.winkspace.site/20190215131149.png">
 <meta property="og:image" content="http://image.winkspace.site/20190215131758.png">
-<meta property="og:updated_time" content="2019-02-18T02:25:04.047Z">
+<meta property="og:updated_time" content="2019-02-18T02:29:27.899Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LinkedList源码解析">
-<meta name="twitter:description" content="#LinkedList源码解析 LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:LinkedList LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。">
+<meta name="twitter:description" content="LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:LinkedList LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。同时LinkedList不是线程">
 <meta name="twitter:image" content="http://image.winkspace.site/20190215112511.png">
 
 
@@ -389,8 +389,7 @@
       
 
       
-        <p>#LinkedList源码解析</p>
-<p>LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:<br><strong>LinkedList</strong></p>
+        <p>LinkedList,ArrayList作为java语言中比较常用的数据结构，在工作中使用频率是比较高的，所以不论是抱着学习的态度还是工作上的需要，在这里结合相应的源码对他们做一个总结和归纳。:tw-1f60a:<br><strong>LinkedList</strong></p>
 <p>LinkedList从字面意思上理解就是连接起来的列表，其实现是基于双向链表的，代表其内部是有序的，并且其中的元素是允许为NULL的。同时LinkedList不是线程安全的，意味着在多线程环境下可能会面临线程安全问题。如果想在线程安全的情况下使用它可以这样做。<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">List</span> <span class="built_in">list</span>=Collections.synchronizedList(<span class="literal">new</span> LinkedList(<span class="params">...</span>));</span><br></pre></td></tr></table></figure></p>
 <p>但是这样做有一点需要注意，这样加锁只适用于对list的原子操作。<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">list</span>.add（<span class="params">...</span>）；</span><br><span class="line"><span class="built_in">list</span>.remove（<span class="params">...</span>）；</span><br><span class="line"><span class="params">...</span></span><br></pre></td></tr></table></figure></p>
 <p>如何需要对list的状态进行判断，必须进行手动控制才能保证线程的安全性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListHelper</span>&lt;E&gt; &#123;</span></span><br><span class="line"> <span class="keyword">public</span> List&lt;E&gt; <span class="built_in">list</span> = Collection.synchronizedList(<span class="keyword">new</span> ArrayList&lt;E&gt;());</span><br><span class="line">  ...</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(E x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="built_in">list</span>.empty)&#123; <span class="comment">//多线程情况下，无法确定list的状态会导致线程安全问题</span></span><br><span class="line">   <span class="built_in">list</span>.add(x);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -443,22 +442,6 @@
       
       
 
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/11/30/essay/" rel="next" title="essay">
-                <i class="fa fa-chevron-left"></i> essay
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-          </div>
-        </div>
       
 
       
@@ -539,7 +522,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
